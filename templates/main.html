@@ -1,0 +1,42 @@
+<p>Having lots of problems with rendering on changes</p>
+<h3>Map A</h3>
+<div class="row">
+  <div class="col col-xs-6">
+    <map [center]="center" (recentered)="whereAreWe($event)" [(zoom)]="zoom" (drag-start)="setDragging($event)" (drag-end)="setDragging($event)">
+    <marker draggable [title]="'Location #'+moves" (on-moved)="centerToLocation($event)"></marker>
+    </map>
+    <p>Center from map: {{mapcenter?.lat()}}, {{mapcenter?.lng()}}</p>
+    <p>Dragging? <span [inner-html]="dragging"></span></p>
+    <p>Zoom <input [(ng-model)]="zoom" type="number"></p>
+    <button (click)="centerToLocation()" class="btn btn-info">Center on current location <i class="fa fa-map-marker"></i></button>
+  </div>
+  <div class="col col-xs-6">
+    <ul>
+      <li>Two way binding on zoom</li>
+      <li>One way binding on center, but also has a map-center to display the current map's center</li>
+      <li>When dragging, will say so</li>
+      <li>Draggable marker; when dropped, will center the map on the marker</li>
+      <li>Marker title changes each time we relocate the marker</li>
+      <li>Use the "center on current location" button to center on your navigator's location</li>
+    </ul>
+  </div>
+</div>
+<h3>Map B</h3>
+<div class="row">
+  <div class="col col-xs-6">
+    <map [latitude]="latitude" [longitude]="longitude" zoom="3">
+      <marker title="Fixed" latitude="-21.805149" longitude="-49.089977"></marker>
+    </map>
+    <p>Center from main component:
+      Latitude: <input [(ng-model)]="latitude">
+      Longitude: <input [(ng-model)]="longitude">
+    </p>
+  </div>
+  <div class="col col-xs-6">
+    <ul>
+      <li>No binding on zoom</li>
+      <li>One way binding on latitude and longitude (can be set in the inputs)</li>
+      <li>Fixed position marker</li>
+    </ul>
+  </div>
+</div>
