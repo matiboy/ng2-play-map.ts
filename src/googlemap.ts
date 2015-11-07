@@ -1,4 +1,4 @@
-import {Component, View, bootstrap, provide, NgZone, Inject, CORE_DIRECTIVES, FORM_DIRECTIVES, EventEmitter, Output, Input, OnChanges, SimpleChange, ChangeDetectionStrategy} from 'angular2/angular2';
+import {Component, View, bootstrap, provide, NgZone, Inject, CORE_DIRECTIVES, FORM_DIRECTIVES, EventEmitter, Output, Input, OnChanges, SimpleChange} from 'angular2/angular2';
 import {MAP_KEY, MapDirective} from './map';
 import {MarkerDirective} from './marker';
 import {GoogleMapsService} from './services/googlemaps';

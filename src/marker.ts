@@ -1,10 +1,11 @@
 /// reference
-import {Directive, Host, Optional, Input, Output, ElementRef, EventEmitter, OnChanges, SimpleChange} from 'angular2/angular2';
+import {Directive, Host, Optional, Input, Output, ElementRef, EventEmitter, OnChanges, SimpleChange, ChangeDetectionStrategy} from 'angular2/angular2';
 import {Map} from './models/map';
 import {MapService} from './services/maps';
 
 @Directive({
-  selector: 'marker'
+  selector: 'marker',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarkerDirective implements OnChanges {
   map: Map;
