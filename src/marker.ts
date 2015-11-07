@@ -11,21 +11,27 @@ export class MarkerDirective implements OnChanges {
   private initialized: Function;
   @Input() draggable = false;
   @Input() title = '';
+  @Input() latitude: number;
+  @Input() longitude: number;
   @Output() onMoved = new EventEmitter();
-  marker: any;
+  marker: google.maps.Marker;
   constructor(@Host() mapService: MapService) {
     var self = this;
     Promise.all([mapService.map, new Promise<void>(function(resolve) {
       self.initialized = resolve;
     })]).then(function(out: [Map, void]) {
       self.map = out[0];
+      let center = self.map.getCenter();
+      if(self.latitude !== undefined) {
+        center = new google.maps.LatLng(self.latitude, self.longitude);
+      }
       var marker = new google.maps.Marker({
-        position: self.map.getCenter(),
+        position: center,
         map: self.map.map,
         title: self.title,
         draggable: self.draggable
       });
-      marker.addListener('dragend', function(e) {
+      marker.addListener('dragend', function(e: any) {
         self.onMoved.next({ latitude: e.latLng.lat(), longitude: e.latLng.lng() });
       });
       self.marker = marker;

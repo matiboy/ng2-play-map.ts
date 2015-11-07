@@ -1,4 +1,4 @@
-import {Component, View, bootstrap, provide, NgZone, Inject, CORE_DIRECTIVES, FORM_DIRECTIVES, EventEmitter, Output, Input, OnChanges, SimpleChange} from 'angular2/angular2';
+import {Component, View, bootstrap, provide, NgZone, Inject, CORE_DIRECTIVES, FORM_DIRECTIVES, EventEmitter, Output, Input, OnChanges, SimpleChange, ChangeDetectionStrategy} from 'angular2/angular2';
 import {MAP_KEY, MapDirective} from './map';
 import {MarkerDirective} from './marker';
 import {GoogleMapsService} from './services/googlemaps';
@@ -12,13 +12,15 @@ let MAP_KEY_PROVIDER = provide(MAP_KEY, { useValue: 'YOUR_MAP_KEY' });
   templateUrl: 'templates/main.html'
 })
 class GoogleMapComponent {
-  center: Object = {
-    latitude: '3.1113339',
-    longitude: '101.6655921'
+  center = {
+    latitude: 3.1113339,
+    longitude: 101.6655921
   };
+  latitude = 0;
+  longitude = 0;
   mapcenter = { lat: () => 0, lng: () => 0};
-  dragging: string = 'Nope';
-  zoom: number = 15;
+  dragging = 'Nope';
+  zoom = 15;
   moves = 0;
   constructor(private _ngZone: NgZone) {
     this._ngZone = _ngZone;
@@ -35,6 +37,7 @@ class GoogleMapComponent {
       // Ignore if rejected
       navigator.geolocation.getCurrentPosition(function(geo) {
         self.center = geo.coords;
+        self._ngZone.run(() => 0);
       });
     } else {
       self.center = location;

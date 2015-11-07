@@ -1,4 +1,4 @@
-import {OpaqueToken, Inject, Directive, Input, Output, OnChanges, SimpleChange, ElementRef, EventEmitter} from 'angular2/angular2';
+import {NgZone, OpaqueToken, Inject, Directive, Input, Output, OnChanges, SimpleChange, ElementRef, EventEmitter} from 'angular2/angular2';
 import {CONST_EXPR} from 'angular2/src/core/facade/lang';
 
 import {Map} from './models/map';
@@ -13,6 +13,8 @@ export const MAP_KEY: OpaqueToken = CONST_EXPR(new OpaqueToken('mapKey'));
 })
 export class MapDirective implements OnChanges {
   @Input() center: Object;
+  @Input() latitude: number;
+  @Input() longitude: number;
   @Input() zoom: number;
   @Output() dragStart = new EventEmitter();
   @Output() dragEnd = new EventEmitter();
@@ -21,6 +23,7 @@ export class MapDirective implements OnChanges {
   private gotCenter: Function;
   private gotZoom: Function;
   private ready: Promise<any>;
+  private _ngZone: NgZone;
   constructor( @Inject(MAP_KEY) mapKey: string, @Inject(MapService) mapService: MapService, @Inject(GoogleMapsService) loader: GoogleMapsService, elementRef: ElementRef) {
     var self = this;
     let gotCenter = new Promise( (resolve, reject) => {
@@ -86,6 +89,19 @@ export class MapDirective implements OnChanges {
         // Center the map
         this.centerMap(center);
       }
+    }
+    if('latitude' in changes && 'longitude' in changes) {
+      let center = {latitude: changes['latitude'].currentValue, longitude: changes['longitude'].currentValue};
+      this.gotCenter(center);
+      this.centerMap(center);
+    }
+    if('latitude' in changes) {
+      let center = {latitude: changes['latitude'].currentValue, longitude: this.longitude};
+      this.centerMap(center);
+    }
+    if('longitude' in changes) {
+      let center = {longitude: changes['longitude'].currentValue, latitude: this.latitude};
+      this.centerMap(center);
     }
     if('zoom' in changes){
       let zoom = parseInt(changes['zoom'].currentValue, 10);
