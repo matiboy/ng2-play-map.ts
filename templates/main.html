@@ -1,0 +1,19 @@
+<ul>
+  <li>Both maps are independent but they share the same 1. center and 2. zoom</li>
+  <li>The top marker is draggable and the map will recenter on its position when dragging stops</li>
+  <li>The bottom marker is non draggable so when the map recenters, the marker will not move</li>
+  <li>Change detection is not done right, somehow it requires zone._run each time</li>
+</ul>
+<h3>Map A</h3>
+<map [center]="center" (recentered)="whereAreWe($event)" [(zoom)]="zoom" (drag-start)="setDragging($event)" (drag-end)="setDragging($event)">
+  <marker draggable [title]="'Location #'+moves" (on-moved)="centerToLocation($event)"></marker>
+</map>
+<h3>Map B</h3>
+<map [center]="center" (recentered)="whereAreWe($event)" [(zoom)]="zoom" (drag-start)="setDragging($event)" (drag-end)="setDragging($event)">
+  <marker title="Fixed"></marker>
+</map>
+<p>Center from main component: {{center.latitude}}, {{center.longitude}}</p>
+<p>Center from map: {{mapcenter?.lat()}}, {{mapcenter?.lng()}}</p>
+<p>Dragging? <span [inner-html]="dragging"></span></p>
+<p>Zoom <input [(ng-model)]="zoom" type="number"></p>
+<button (click)="centerToLocation()" class="btn btn-info">Center on current location <i class="fa fa-map-marker"></i></button>

@@ -1,10 +1,15 @@
 import {OpaqueToken, Inject, Directive, Input, Output, OnChanges, SimpleChange, ElementRef, EventEmitter} from 'angular2/angular2';
 import {CONST_EXPR} from 'angular2/src/core/facade/lang';
 
+import {Map} from './models/map';
+import {MapService} from './services/maps';
+import {GoogleMapsService} from './services/googlemaps';
+
 export const MAP_KEY: OpaqueToken = CONST_EXPR(new OpaqueToken('mapKey'));
 
 @Directive({
-  selector: 'map'
+  selector: 'map',
+  bindings: [MapService]
 })
 export class MapDirective implements OnChanges {
   @Input() center: Object;
@@ -16,29 +21,31 @@ export class MapDirective implements OnChanges {
   private gotCenter: Function;
   private gotZoom: Function;
   private ready: Promise<any>;
-  constructor(@Inject(MAP_KEY) mapKey: string, elementRef: ElementRef) {
+  constructor( @Inject(MAP_KEY) mapKey: string, @Inject(MapService) mapService: MapService, @Inject(GoogleMapsService) loader: GoogleMapsService, elementRef: ElementRef) {
     var self = this;
     let gotCenter = new Promise( (resolve, reject) => {
       self.gotCenter = resolve;
     });
-    let gotZoom = new Promise( (resolve, reject) => {
+    let gotZoom = new Promise<number>( (resolve, reject) => {
       self.gotZoom = resolve;
     });
-    let scriptLoaded = this.loadScript(mapKey).then( () => {
+    let scriptLoaded = loader.load(mapKey).then( () => {
       console.debug('Google script has been loaded');
     });
-    this.ready = Promise.all([scriptLoaded, gotCenter, gotZoom]).then(function(outcome: any[]) {
+    this.ready = Promise.all([scriptLoaded, gotCenter, gotZoom]).then(function(outcome: [void, any, number]) {
       var center = self.objToLatLng(outcome[1]);
       var zoom = outcome[2];
       var map = new google.maps.Map(elementRef.nativeElement, {
         center: center,
         zoom: zoom
       });
+      map = new Map(map);
+      mapService.setMap(map);
       return map;
     });
     this.ready.then(this.addEventListeners.bind(this));
   }
-  addEventListeners(map) {
+  addEventListeners(map: Map) {
     var self = this;
     map.addListener('dragstart', () => {
       console.log('started');
@@ -55,20 +62,10 @@ export class MapDirective implements OnChanges {
       self.zoomChange.next(map.getZoom());
     });
   }
-  private objToLatLng(o: Object) {
+  private objToLatLng(o: {latitude: number, longitude: number}) {
     return new google.maps.LatLng(o['latitude'], o['longitude']);
   }
-  loadScript(key:string) {
-    return new Promise( (resolve, reject) => {
-      var script = document.createElement('script');
-      script.onload = function() {
-        resolve();
-      }
-      script.setAttribute('src', "https://maps.googleapis.com/maps/api/js?key=" + key);
-      document.getElementsByTagName('body')[0].appendChild(script);
-    });
-  }
-  centerMap(center: Object) {
+  centerMap(center: { latitude: number, longitude: number } ) {
     var self = this;
     this.ready.then(function(map) {
       map.panTo(self.objToLatLng(center));
