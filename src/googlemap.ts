@@ -12,7 +12,7 @@ let MAP_KEY_PROVIDER = provide(MAP_KEY, { useValue: 'YOUR_MAP_KEY' });
     <map [center]="center" (recentered)="whereAreWe($event)" [(zoom)]="zoom" (drag-start)="setDragging($event)" (drag-end)="setDragging($event)"></map>
     <p>Center from main component: {{center.latitude}}, {{center.longitude}}</p>
     <p>Center from map: {{mapcenter?.lat()}}, {{mapcenter?.lng()}}</p>
-    <p>Dragging? <span [text-content]="dragging"></span></p>
+    <p>Dragging? <span [inner-html]="dragging"></span></p>
     <p>Zoom <input [(ng-model)]="zoom" type="number"></p>
     <button (click)="centerToLocation()" class="btn btn-info">Center on current location <i class="fa fa-map-marker"></i></button>
   `
@@ -29,7 +29,7 @@ class GoogleMapComponent {
     this._ngZone = _ngZone;
   }
   setDragging(v) {
-    this.dragging = v ? 'Yes' : 'No';
+    this.dragging = v ? '<b>Yes</b>' : '<i>No</i>';
     this._ngZone.run(() => 0);
   }
   centerToLocation(){
