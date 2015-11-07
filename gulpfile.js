@@ -25,8 +25,6 @@ gulp.task('ts2js', function () {
 });
 
 gulp.task('mapkey', ['ts2js'], function() {
-    console.log('I see');
-    console.log(process.env.MAP_KEY);
     var replace = require('gulp-replace');
     return gulp.src(['dist/googlemap.js'])
         .pipe(replace('YOUR_MAP_KEY', process.env.MAP_KEY))
