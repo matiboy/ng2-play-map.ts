@@ -32,9 +32,11 @@ System.register(['angular2/angular2', './map', './marker', './services/googlemap
                 function GoogleMapComponent(_ngZone) {
                     this._ngZone = _ngZone;
                     this.center = {
-                        latitude: '3.1113339',
-                        longitude: '101.6655921'
+                        latitude: 3.1113339,
+                        longitude: 101.6655921
                     };
+                    this.latitude = -20;
+                    this.longitude = -70;
                     this.mapcenter = { lat: function () { return 0; }, lng: function () { return 0; } };
                     this.dragging = 'Nope';
                     this.zoom = 15;
@@ -53,6 +55,7 @@ System.register(['angular2/angular2', './map', './marker', './services/googlemap
                         // Ignore if rejected
                         navigator.geolocation.getCurrentPosition(function (geo) {
                             self.center = geo.coords;
+                            self._ngZone.run(function () { return 0; });
                         });
                     }
                     else {
@@ -71,7 +74,7 @@ System.register(['angular2/angular2', './map', './marker', './services/googlemap
                     angular2_1.View({
                         directives: [map_1.MapDirective, angular2_1.CORE_DIRECTIVES, angular2_1.FORM_DIRECTIVES, marker_1.MarkerDirective],
                         templateUrl: 'templates/main.html'
-                    }), 
+                    }),
                     __metadata('design:paramtypes', [angular2_1.NgZone])
                 ], GoogleMapComponent);
                 return GoogleMapComponent;

@@ -105,6 +105,19 @@ System.register(['angular2/angular2', 'angular2/src/core/facade/lang', './models
                             this.centerMap(center);
                         }
                     }
+                    if ('latitude' in changes && 'longitude' in changes) {
+                        var center = { latitude: changes['latitude'].currentValue, longitude: changes['longitude'].currentValue };
+                        this.gotCenter(center);
+                        this.centerMap(center);
+                    }
+                    if ('latitude' in changes) {
+                        var center = { latitude: changes['latitude'].currentValue, longitude: this.longitude };
+                        this.centerMap(center);
+                    }
+                    if ('longitude' in changes) {
+                        var center = { longitude: changes['longitude'].currentValue, latitude: this.latitude };
+                        this.centerMap(center);
+                    }
                     if ('zoom' in changes) {
                         var zoom = parseInt(changes['zoom'].currentValue, 10);
                         if (zoom !== undefined) {
@@ -119,6 +132,14 @@ System.register(['angular2/angular2', 'angular2/src/core/facade/lang', './models
                     angular2_1.Input(), 
                     __metadata('design:type', Object)
                 ], MapDirective.prototype, "center");
+                __decorate([
+                    angular2_1.Input(), 
+                    __metadata('design:type', Number)
+                ], MapDirective.prototype, "latitude");
+                __decorate([
+                    angular2_1.Input(), 
+                    __metadata('design:type', Number)
+                ], MapDirective.prototype, "longitude");
                 __decorate([
                     angular2_1.Input(), 
                     __metadata('design:type', Number)

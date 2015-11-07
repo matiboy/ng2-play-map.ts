@@ -1,3 +1,32 @@
+map {
+  width: 500px;
+  height: 300px;
+  display: block;
+}
+
+.row {
+  width: 1100;
+  background-color: white;
+  padding: 10px;
+}
+
+.col {
+  vertical-align: top;
+  display: inline-block;
+}
+
+.col-xs-6 {
+  width: 500px;
+}
+
+.col b {
+  font-weight: bold;
+}
+
+.col i {
+  font-style: italic;
+}
+
 /*******************************************************************************
 Slate Theme for GitHub Pages
 by Jason Costello, @jsncostello
@@ -266,7 +295,7 @@ Full-Width Styles
 
 .inner {
   position: relative;
-  max-width: 640px;
+  max-width: 1100px;
   padding: 20px 10px;
   margin: 0 auto;
 }

@@ -34,8 +34,12 @@ System.register(['angular2/angular2', './services/maps'], function(exports_1) {
                             self.initialized = resolve;
                         })]).then(function (out) {
                         self.map = out[0];
+                        var center = self.map.getCenter();
+                        if (self.latitude !== undefined) {
+                            center = new google.maps.LatLng(self.latitude, self.longitude);
+                        }
                         var marker = new google.maps.Marker({
-                            position: self.map.getCenter(),
+                            position: center,
                             map: self.map.map,
                             title: self.title,
                             draggable: self.draggable
@@ -68,12 +72,21 @@ System.register(['angular2/angular2', './services/maps'], function(exports_1) {
                     __metadata('design:type', Object)
                 ], MarkerDirective.prototype, "title");
                 __decorate([
+                    angular2_1.Input(), 
+                    __metadata('design:type', Number)
+                ], MarkerDirective.prototype, "latitude");
+                __decorate([
+                    angular2_1.Input(), 
+                    __metadata('design:type', Number)
+                ], MarkerDirective.prototype, "longitude");
+                __decorate([
                     angular2_1.Output(), 
                     __metadata('design:type', Object)
                 ], MarkerDirective.prototype, "onMoved");
                 MarkerDirective = __decorate([
                     angular2_1.Directive({
-                        selector: 'marker'
+                        selector: 'marker',
+                        changeDetection: angular2_1.ChangeDetectionStrategy.OnPush
                     }),
                     __param(0, angular2_1.Host()), 
                     __metadata('design:paramtypes', [maps_1.MapService])
